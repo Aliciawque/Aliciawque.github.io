@@ -1,0 +1,146 @@
+/* ============================================================
+   Font Faces
+   ============================================================ */
+
+@font-face {
+  font-family: 'Maple Mono';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local('Maple Mono NF CN Regular'),
+       url('/fonts/MapleMono-NF-CN-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Maple Mono';
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: local('Maple Mono NF CN Italic'),
+       url('/fonts/MapleMono-NF-CN-Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Maple Mono';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src: local('Maple Mono NF CN SemiBold'),
+       url('/fonts/MapleMono-NF-CN-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Maple Mono';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: local('Maple Mono NF CN Bold'),
+       url('/fonts/MapleMono-NF-CN-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Share Tech Mono';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local('Share Tech Mono'),
+       url('/fonts/ShareTechMono-Regular.woff2') format('woff2');
+}
+
+/* ============================================================
+   Light Theme (default)
+   ============================================================ */
+
+:root,
+[data-theme="light"] {
+  --bg: #faf6f1;
+  --surface: #ffffff;
+  --text: #1a1a1a;
+  --text-secondary: #8b7e74;
+  --text-muted: #b8a99a;
+  --border: #e8e0d8;
+  --accent: #6b5c4d;
+  --tag-bg: #f0ebe5;
+  --font-body: 'Maple Mono', ui-monospace, monospace;
+  --font-en: 'Maple Mono', ui-monospace, monospace;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
+}
+
+/* ============================================================
+   Dark Theme
+   ============================================================ */
+
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --text: #eeeeee;
+  --text-secondary: #888888;
+  --text-muted: #555555;
+  --border: #1a1a1a;
+  --accent: #00ff88;
+  --tag-bg: #0a1a10;
+  --font-body: 'Maple Mono', ui-monospace, monospace;
+  --font-en: 'Share Tech Mono', 'Maple Mono', ui-monospace, monospace;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Layout Utilities
+   ============================================================ */
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
