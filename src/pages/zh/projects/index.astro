@@ -2,7 +2,6 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
 import { t } from '../../../i18n/utils'
-import ShrinkWrap from '../../../components/pretext/ShrinkWrap.tsx'
 
 const lang = 'zh' as const
 const projects = await getCollection('projects', ({ data }) => data.lang === lang)
@@ -16,7 +15,7 @@ const sorted = projects.sort((a, b) => a.data.order - b.data.order)
 
     <div class="projects-grid">
       {sorted.map(project => (
-        <ShrinkWrap client:visible text={project.data.description} font="16px Maple Mono" maxWidth={400} className="project-card">
+        <div class="project-card">
           <h3 class="project-title">
             {project.data.url ? (
               <a href={project.data.url} target="_blank" rel="noopener">{project.data.title}</a>
@@ -28,17 +27,16 @@ const sorted = projects.sort((a, b) => a.data.order - b.data.order)
               <span class="tag">{tech}</span>
             ))}
           </div>
-        </ShrinkWrap>
+        </div>
       ))}
     </div>
   </div>
 </BaseLayout>
 
-<style is:global>
+<style>
   .page-header { padding: 40px 0 24px; }
   .page-title { font-size: 24px; font-weight: 600; color: var(--text); }
-  [data-theme="dark"] .page-title { color: var(--accent); }
-  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding-bottom: 40px; }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; padding-bottom: 40px; }
   .project-card {
     padding: 20px;
     background: var(--surface);
@@ -53,5 +51,4 @@ const sorted = projects.sort((a, b) => a.data.order - b.data.order)
   .project-desc { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.7; }
   .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
   .tag { font-size: 11px; padding: 3px 10px; background: var(--tag-bg); color: var(--text-secondary); border-radius: var(--radius-md); }
-  [data-theme="dark"] .tag { color: var(--accent); border: 1px solid var(--tag-bg); }
 </style>
