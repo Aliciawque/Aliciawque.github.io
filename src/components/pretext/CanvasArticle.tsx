@@ -39,10 +39,15 @@ export default function CanvasArticle({
     const padding = 24
     const imgGap = 16
 
+    // Scale image down on narrow screens
+    const isMobile = containerWidth < 500
+    const actualImgW = isMobile ? imageWidth * 0.6 : imageWidth
+    const actualImgH = isMobile ? imageHeight * 0.6 : imageHeight
+
     // Image position: top-right with padding
-    const imgX = containerWidth - padding - imageWidth
+    const imgX = containerWidth - padding - actualImgW
     const imgY = padding
-    const imgBottom = imgY + imageHeight
+    const imgBottom = imgY + actualImgH
 
     // Calculate all lines with variable widths
     const lines: { text: string; x: number; y: number }[] = []
@@ -58,6 +63,7 @@ export default function CanvasArticle({
         const lineTop = y - fontSize
         if (lineTop < imgBottom) {
           lineWidth = imgX - padding - imgGap
+          if (lineWidth < 80) lineWidth = containerWidth - padding * 2
         }
       }
 
@@ -100,7 +106,7 @@ export default function CanvasArticle({
       if (!imageSrc) return
       const img = new Image()
       img.onload = () => {
-        ctx.drawImage(img, imgX, imgY, imageWidth, imageHeight)
+        ctx.drawImage(img, imgX, imgY, actualImgW, actualImgH)
       }
       img.src = imageSrc
     }

@@ -74,6 +74,18 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
   @media (max-width: 900px) {
     .article-layout {
       grid-template-columns: 1fr;
+      gap: 24px;
+      max-width: 100%;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+  @media (max-width: 768px) {
+    .article-title {
+      font-size: 22px;
+    }
+    .canvas-quote {
+      overflow-x: auto;
     }
   }
   .article-header {
