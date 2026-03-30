@@ -1,0 +1,134 @@
+---
+interface Props {
+  dates: string[] // ISO date strings of post publish dates
+}
+
+const { dates } = Astro.props
+const postDates = new Set(dates)
+
+// Generate last 365 days
+const today = new Date()
+const days: { date: string; weekday: number; weekIndex: number }[] = []
+const start = new Date(today)
+start.setDate(start.getDate() - 364)
+
+// Align to Sunday
+while (start.getDay() !== 0) {
+  start.setDate(start.getDate() - 1)
+}
+
+let weekIndex = 0
+let lastDay = -1
+const d = new Date(start)
+while (d <= today) {
+  const weekday = d.getDay()
+  if (weekday === 0 && lastDay !== -1) weekIndex++
+  lastDay = weekday
+  days.push({
+    date: d.toISOString().slice(0, 10),
+    weekday,
+    weekIndex,
+  })
+  d.setDate(d.getDate() + 1)
+}
+
+const totalWeeks = weekIndex + 1
+
+// Month labels
+const months: { label: string; weekIndex: number }[] = []
+let lastMonth = -1
+for (const day of days) {
+  const m = new Date(day.date).getMonth()
+  if (m !== lastMonth) {
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    months.push({ label: labels[m], weekIndex: day.weekIndex })
+    lastMonth = m
+  }
+}
+
+const postCount = dates.length
+---
+<div class="activity-graph">
+  <p class="activity-title">{postCount} post{postCount !== 1 ? 's' : ''} in the last year</p>
+  <div class="graph-scroll">
+    <svg
+      width={totalWeeks * 15 + 40}
+      height={7 * 15 + 30}
+      class="graph-svg"
+    >
+      <!-- Month labels -->
+      {months.map(m => (
+        <text
+          x={m.weekIndex * 15 + 40}
+          y={10}
+          class="month-label"
+        >{m.label}</text>
+      ))}
+
+      <!-- Day labels -->
+      <text x={12} y={15 + 1 * 15 + 8} class="day-label">Mon</text>
+      <text x={12} y={15 + 3 * 15 + 8} class="day-label">Wed</text>
+      <text x={12} y={15 + 5 * 15 + 8} class="day-label">Fri</text>
+
+      <!-- Cells -->
+      {days.map(day => {
+        const hasPost = postDates.has(day.date)
+        return (
+          <rect
+            x={day.weekIndex * 15 + 40}
+            y={day.weekday * 15 + 15}
+            width={11}
+            height={11}
+            rx={2}
+            class:list={['cell', { active: hasPost }]}
+          >
+            <title>{day.date}{hasPost ? ' — published' : ''}</title>
+          </rect>
+        )
+      })}
+    </svg>
+  </div>
+</div>
+
+<style>
+  .activity-graph {
+    margin: 24px 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .activity-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+  .graph-scroll {
+    overflow-x: auto;
+  }
+  .graph-svg {
+    display: block;
+  }
+  .month-label {
+    font-size: 10px;
+    fill: var(--text-muted);
+    font-family: var(--font-body);
+  }
+  .day-label {
+    font-size: 9px;
+    fill: var(--text-muted);
+    font-family: var(--font-body);
+    text-anchor: end;
+  }
+  .cell {
+    fill: var(--border);
+    transition: fill 0.2s;
+  }
+  .cell.active {
+    fill: var(--accent);
+  }
+  .cell:hover {
+    stroke: var(--text-muted);
+    stroke-width: 1;
+  }
+</style>
