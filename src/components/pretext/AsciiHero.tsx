@@ -109,15 +109,25 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
 
     canvas.addEventListener('mousemove', handleMouse)
     canvas.addEventListener('mouseleave', handleLeave)
-    const handleTouch = (e: TouchEvent) => {
+    const handleTouchStart = (e: TouchEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      mouseRef.current = { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top }
+    }
+    const handleTouchMove = (e: TouchEvent) => {
       const rect = canvas.getBoundingClientRect()
       mouseRef.current = { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top }
     }
     const handleTouchEnd = () => {
+      // Immediately clear and reset all particle velocities for clean settle
       mouseRef.current = { x: -1000, y: -1000 }
+      for (const p of particlesRef.current) {
+        p.vx *= 0.3
+        p.vy *= 0.3
+      }
     }
 
-    canvas.addEventListener('touchmove', handleTouch)
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true })
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true })
     canvas.addEventListener('touchend', handleTouchEnd)
     canvas.addEventListener('touchcancel', handleTouchEnd)
 
@@ -154,10 +164,10 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
           p.vy += (dy / dist) * force
         }
 
-        p.vx += (p.targetX - p.x) * 0.06
-        p.vy += (p.targetY - p.y) * 0.06
-        p.vx *= 0.88
-        p.vy *= 0.88
+        p.vx += (p.targetX - p.x) * 0.08
+        p.vy += (p.targetY - p.y) * 0.08
+        p.vx *= 0.82
+        p.vy *= 0.82
         p.x += p.vx
         p.y += p.vy
 
@@ -185,7 +195,8 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
       window.removeEventListener('resize', resize)
       canvas.removeEventListener('mousemove', handleMouse)
       canvas.removeEventListener('mouseleave', handleLeave)
-      canvas.removeEventListener('touchmove', handleTouch)
+      canvas.removeEventListener('touchstart', handleTouchStart)
+      canvas.removeEventListener('touchmove', handleTouchMove)
       canvas.removeEventListener('touchend', handleTouchEnd)
       canvas.removeEventListener('touchcancel', handleTouchEnd)
     }
