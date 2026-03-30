@@ -1,0 +1,57 @@
+---
+import ThemeToggle from './ThemeToggle.astro'
+import LanguageSwitch from './LanguageSwitch.astro'
+import { t, type Lang } from '../i18n/utils'
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const currentPath = Astro.url.pathname
+---
+<nav class="nav">
+  <div class="nav-inner container">
+    <a href={`/${lang}/`} class="logo">
+      <span class="logo-text">Alicia.dev</span>
+    </a>
+    <div class="nav-links">
+      <a href={`/${lang}/blog/`} class:list={[{ active: currentPath.includes('/blog') }]}>
+        {t(lang, 'nav.blog')}
+      </a>
+      <a href={`/${lang}/projects/`} class:list={[{ active: currentPath.includes('/projects') }]}>
+        {t(lang, 'nav.projects')}
+      </a>
+      <a href={`/${lang}/about`} class:list={[{ active: currentPath.includes('/about') }]}>
+        {t(lang, 'nav.about')}
+      </a>
+      <LanguageSwitch lang={lang} />
+      <ThemeToggle />
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  .logo { text-decoration: none; }
+  .logo-text { font-size: 17px; font-weight: 600; color: var(--text); }
+  [data-theme="dark"] .logo-text { color: var(--accent); font-family: var(--font-en); }
+  .nav-links { display: flex; gap: 18px; align-items: center; font-size: 13px; }
+  .nav-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+  [data-theme="dark"] .nav-links a { font-family: var(--font-en); }
+</style>

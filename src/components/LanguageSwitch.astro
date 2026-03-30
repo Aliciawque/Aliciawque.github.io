@@ -1,0 +1,30 @@
+---
+import { t, getTranslatedPath, type Lang } from '../i18n/utils'
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const targetLang: Lang = lang === 'zh' ? 'en' : 'zh'
+const targetPath = getTranslatedPath(Astro.url.pathname, targetLang)
+---
+<a href={targetPath} class="lang-switch" title={targetLang === 'en' ? 'Switch to English' : '切换到中文'}>
+  {t(lang, 'lang.switch')}
+</a>
+
+<style>
+  .lang-switch {
+    font-size: 12px;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted) !important;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lang-switch:hover {
+    border-color: var(--accent);
+    color: var(--accent) !important;
+    text-decoration: none !important;
+  }
+</style>
