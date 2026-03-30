@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
 
 export default defineConfig({
-  site: 'https://your-username.github.io',
+  site: 'https://aliciawque.github.io',
   integrations: [react()],
   i18n: {
     defaultLocale: 'zh',
