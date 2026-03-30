@@ -3,6 +3,7 @@ import '../styles/global.css'
 import Nav from '../components/Nav.astro'
 import Footer from '../components/Footer.astro'
 import { type Lang } from '../i18n/utils'
+import ScrollSpark from '../components/pretext/ScrollSpark.tsx'
 
 interface Props {
   title: string
@@ -34,5 +35,6 @@ const { title, lang, description = '' } = Astro.props
     <slot />
   </main>
   <Footer lang={lang} />
+  <ScrollSpark client:idle />
 </body>
 </html>
