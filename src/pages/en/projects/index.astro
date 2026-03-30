@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import { t } from '../../../i18n/utils'
+
+const lang = 'en' as const
+const projects = await getCollection('projects', ({ data }) => data.lang === lang)
+const sorted = projects.sort((a, b) => a.data.order - b.data.order)
+---
+<BaseLayout title={`${t(lang, 'projects.title')} — Alicia.dev`} lang={lang}>
+  <div class="container">
+    <header class="page-header">
+      <h1 class="page-title">{t(lang, 'projects.title')}</h1>
+    </header>
+
+    <!-- ShrinkWrap React Island wraps these cards in Task 14 -->
+    <div class="projects-grid">
+      {sorted.map(project => (
+        <div class="project-card">
+          <h3 class="project-title">
+            {project.data.url ? (
+              <a href={project.data.url} target="_blank" rel="noopener">{project.data.title}</a>
+            ) : project.data.title}
+          </h3>
+          <p class="project-desc">{project.data.description}</p>
+          <div class="project-tags">
+            {project.data.tech.map(tech => (
+              <span class="tag">{tech}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { padding: 40px 0 24px; }
+  .page-title { font-size: 24px; font-weight: 600; color: var(--text); }
+  [data-theme="dark"] .page-title { color: var(--accent); }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding-bottom: 40px; }
+  .project-card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.2s;
+  }
+  .project-card:hover { border-color: var(--accent); }
+  .project-title { font-size: 16px; font-weight: 500; }
+  .project-title a { color: var(--text); text-decoration: none; }
+  .project-title a:hover { color: var(--accent); }
+  .project-desc { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.7; }
+  .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .tag { font-size: 11px; padding: 3px 10px; background: var(--tag-bg); color: var(--text-secondary); border-radius: var(--radius-md); }
+  [data-theme="dark"] .tag { color: var(--accent); border: 1px solid var(--tag-bg); }
+</style>
