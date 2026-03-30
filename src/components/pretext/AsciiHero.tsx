@@ -109,27 +109,7 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
 
     canvas.addEventListener('mousemove', handleMouse)
     canvas.addEventListener('mouseleave', handleLeave)
-    const handleTouchStart = (e: TouchEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      mouseRef.current = { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top }
-    }
-    const handleTouchMove = (e: TouchEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      mouseRef.current = { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top }
-    }
-    const handleTouchEnd = () => {
-      // Immediately clear and reset all particle velocities for clean settle
-      mouseRef.current = { x: -1000, y: -1000 }
-      for (const p of particlesRef.current) {
-        p.vx *= 0.3
-        p.vy *= 0.3
-      }
-    }
-
-    canvas.addEventListener('touchstart', handleTouchStart, { passive: true })
-    canvas.addEventListener('touchmove', handleTouchMove, { passive: true })
-    canvas.addEventListener('touchend', handleTouchEnd)
-    canvas.addEventListener('touchcancel', handleTouchEnd)
+    // Touch interaction disabled on mobile — visual-only animation
 
     const animate = () => {
       const ctx = canvas.getContext('2d')
@@ -195,10 +175,6 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
       window.removeEventListener('resize', resize)
       canvas.removeEventListener('mousemove', handleMouse)
       canvas.removeEventListener('mouseleave', handleLeave)
-      canvas.removeEventListener('touchstart', handleTouchStart)
-      canvas.removeEventListener('touchmove', handleTouchMove)
-      canvas.removeEventListener('touchend', handleTouchEnd)
-      canvas.removeEventListener('touchcancel', handleTouchEnd)
     }
   }, [font, initParticles])
 
