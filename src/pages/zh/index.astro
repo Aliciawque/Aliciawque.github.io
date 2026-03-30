@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import { t } from '../../i18n/utils'
+
+const lang = 'zh' as const
+const allPosts = await getCollection('blog', ({ data }) => data.lang === lang)
+const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 5)
+const projects = await getCollection('projects', ({ data }) => data.lang === lang)
+const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slice(0, 3)
+---
+<BaseLayout title="Alicia.dev" lang={lang}>
+  <!-- Hero placeholder — AsciiHero React Island goes here in Task 9 -->
+  <section class="hero container">
+    <h1 class="hero-title">{t(lang, 'home.hero.title')}</h1>
+    <p class="hero-subtitle">{t(lang, 'home.hero.subtitle')}</p>
+  </section>
+
+  <section class="container section">
+    <h2 class="section-label">{t(lang, 'home.latest')}</h2>
+    <div class="card-list">
+      {posts.map(post => (
+        <a href={`/${lang}/blog/${post.data.translationSlug}`} class="card">
+          <h3 class="card-title">{post.data.title}</h3>
+          <p class="card-excerpt">{post.data.excerpt}</p>
+          <div class="card-meta">
+            <div class="card-tags">
+              {post.data.tags.map(tag => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+            <time class="card-date">{post.data.date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' })}</time>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="container section">
+    <h2 class="section-label">{t(lang, 'home.featured')}</h2>
+    <div class="card-list">
+      {sortedProjects.map(project => (
+        <div class="card">
+          <h3 class="card-title">{project.data.title}</h3>
+          <p class="card-excerpt">{project.data.description}</p>
+          <div class="card-tags">
+            {project.data.tech.map(tech => (
+              <span class="tag">{tech}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 48px 24px 40px;
+  }
+  .hero-title {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+    white-space: pre-line;
+  }
+  [data-theme="dark"] .hero-title {
+    color: var(--accent);
+    font-family: var(--font-en);
+  }
+  .hero-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 12px;
+  }
+  [data-theme="dark"] .hero-subtitle {
+    color: var(--text-muted);
+  }
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+  [data-theme="dark"] .section-label {
+    color: var(--accent);
+    opacity: 0.6;
+    font-family: var(--font-en);
+  }
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s;
+    display: block;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .card-excerpt {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    line-height: 1.7;
+  }
+  .card-meta {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .card-meta .card-tags {
+    margin-top: 0;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    background: var(--tag-bg);
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+  }
+  [data-theme="dark"] .tag {
+    color: var(--accent);
+    border: 1px solid var(--tag-bg);
+    font-family: var(--font-en);
+  }
+  .card-date {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
