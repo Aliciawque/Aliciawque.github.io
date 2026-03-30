@@ -1,0 +1,17 @@
+{
+  "nav.blog": "博客",
+  "nav.projects": "项目",
+  "nav.about": "关于",
+  "home.hero.title": "探索技术的边界，\n记录成长的轨迹。",
+  "home.hero.subtitle": "学习心得、个人项目与技术实验。",
+  "home.latest": "最新文章",
+  "home.featured": "精选项目",
+  "blog.title": "博客",
+  "blog.count": "共 {count} 篇",
+  "projects.title": "项目",
+  "about.title": "关于",
+  "footer.built": "基于 Astro & Pretext 构建",
+  "article.toc": "目录",
+  "article.readTime": "{min} 分钟阅读",
+  "lang.switch": "EN"
+}

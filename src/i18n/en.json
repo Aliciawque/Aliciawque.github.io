@@ -1,0 +1,17 @@
+{
+  "nav.blog": "Blog",
+  "nav.projects": "Projects",
+  "nav.about": "About",
+  "home.hero.title": "Exploring the frontiers\nof technology.",
+  "home.hero.subtitle": "Learning notes, projects & experiments.",
+  "home.latest": "Latest Posts",
+  "home.featured": "Featured Projects",
+  "blog.title": "Blog",
+  "blog.count": "{count} posts",
+  "projects.title": "Projects",
+  "about.title": "About",
+  "footer.built": "Built with Astro & Pretext",
+  "article.toc": "Table of Contents",
+  "article.readTime": "{min} min read",
+  "lang.switch": "中"
+}
