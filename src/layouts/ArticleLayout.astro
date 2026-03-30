@@ -16,9 +16,6 @@ interface Props {
 }
 
 const { title, date, tags, lang, headings, readingTime, excerpt = '' } = Astro.props
-const canvasText = lang === 'zh'
-  ? `${excerpt} 这是一段用 Canvas 渲染的文字，由 Pretext 的 layoutNextLine API 驱动，实现了文字环绕不规则形状的效果。每一行的可用宽度根据是否与右侧圆形重叠而动态调整。`
-  : `${excerpt} This text is rendered on Canvas, powered by Pretext's layoutNextLine API, demonstrating text wrapping around irregular shapes. Each line's available width adjusts dynamically based on overlap with the circle.`
 const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
   year: 'numeric', month: 'long', day: 'numeric'
 })
@@ -42,7 +39,7 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
         <div class="canvas-quote">
           <CanvasArticle
             client:visible
-            text={canvasText}
+            text={excerpt}
             font="Maple Mono"
             fontSize={14}
             typewriter={true}
