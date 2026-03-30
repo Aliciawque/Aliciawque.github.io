@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 110" width="160" height="110">
+  <!-- Left arm (short) -->
+  <rect x="14" y="32" width="12" height="18" fill="#D97757"/>
+  <!-- Right arm (short) -->
+  <rect x="134" y="32" width="12" height="18" fill="#D97757"/>
+
+  <!-- Head -->
+  <rect x="24" y="12" width="112" height="64" fill="#D97757"/>
+
+  <!-- Left eye -->
+  <rect x="52" y="38" width="12" height="16" fill="#1a1a1a"/>
+  <!-- Right eye -->
+  <rect x="96" y="38" width="12" height="16" fill="#1a1a1a"/>
+
+  <!-- Four thin legs -->
+  <rect x="40" y="76" width="8" height="22" fill="#D97757"/>
+  <rect x="58" y="76" width="8" height="22" fill="#D97757"/>
+  <rect x="94" y="76" width="8" height="22" fill="#D97757"/>
+  <rect x="112" y="76" width="8" height="22" fill="#D97757"/>
+
+  <!-- Shadow -->
+  <rect x="34" y="98" width="92" height="6" rx="3" fill="rgba(0,0,0,0.08)"/>
+</svg>

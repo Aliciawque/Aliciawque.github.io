@@ -125,9 +125,33 @@ a:hover {
    ============================================================ */
 
 .container {
-  max-width: 720px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 24px;
+}
+
+/* ============================================================
+   Dark Theme English Font
+   ============================================================ */
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4 {
+  color: var(--accent);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] a,
+[data-theme="dark"] span,
+[data-theme="dark"] p,
+[data-theme="dark"] time,
+[data-theme="dark"] button,
+[data-theme="dark"] nav {
+  font-family: var(--font-en);
 }
 
 /* ============================================================

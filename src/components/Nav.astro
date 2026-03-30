@@ -55,3 +55,32 @@ const currentPath = Astro.url.pathname
   .nav-links a:hover, .nav-links a.active { color: var(--accent); }
   [data-theme="dark"] .nav-links a { font-family: var(--font-en); }
 </style>
+
+<script is:inline>
+  (function() {
+    const CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`'
+    const DURATION = 500
+    function scramble(el) {
+      const target = el.dataset.text || el.textContent
+      el.dataset.text = target
+      const chars = [...target]
+      const start = performance.now()
+      function tick(now) {
+        const progress = Math.min((now - start) / DURATION, 1)
+        const revealCount = Math.floor(progress * chars.length)
+        el.textContent = chars.map(function(c, i) {
+          if (i < revealCount) return c
+          if (c === ' ') return ' '
+          return CHARS[Math.floor(Math.random() * CHARS.length)]
+        }).join('')
+        if (progress < 1) requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    }
+    document.querySelectorAll('.nav-links a:not(.lang-switch)').forEach(function(link) {
+      link.addEventListener('mouseenter', function() { scramble(link) })
+    })
+    var logo = document.querySelector('.logo-text')
+    if (logo) logo.addEventListener('mouseenter', function() { scramble(logo) })
+  })()
+</script>

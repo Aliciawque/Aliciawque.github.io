@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
 import { t } from '../../../i18n/utils'
+import ShrinkWrap from '../../../components/pretext/ShrinkWrap.tsx'
 
 const lang = 'en' as const
 const projects = await getCollection('projects', ({ data }) => data.lang === lang)
@@ -13,10 +14,9 @@ const sorted = projects.sort((a, b) => a.data.order - b.data.order)
       <h1 class="page-title">{t(lang, 'projects.title')}</h1>
     </header>
 
-    <!-- ShrinkWrap React Island wraps these cards in Task 14 -->
     <div class="projects-grid">
       {sorted.map(project => (
-        <div class="project-card">
+        <ShrinkWrap client:visible text={project.data.description} font="16px Maple Mono" maxWidth={400} className="project-card">
           <h3 class="project-title">
             {project.data.url ? (
               <a href={project.data.url} target="_blank" rel="noopener">{project.data.title}</a>
@@ -28,13 +28,13 @@ const sorted = projects.sort((a, b) => a.data.order - b.data.order)
               <span class="tag">{tech}</span>
             ))}
           </div>
-        </div>
+        </ShrinkWrap>
       ))}
     </div>
   </div>
 </BaseLayout>
 
-<style>
+<style is:global>
   .page-header { padding: 40px 0 24px; }
   .page-title { font-size: 24px; font-weight: 600; color: var(--text); }
   [data-theme="dark"] .page-title { color: var(--accent); }

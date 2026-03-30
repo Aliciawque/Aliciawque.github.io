@@ -1,38 +1,35 @@
 import { useRef, useEffect, useState } from 'react'
 import { prepareWithSegments, layoutNextLine, type LayoutCursor } from '@chenglou/pretext'
 
-const LINE_HEIGHT = 28
-
-interface FloatShape {
-  x: number
-  y: number
-  width: number
-  height: number
-  radius?: number
-}
+const LINE_HEIGHT = 26
 
 export default function CanvasArticle({
   text,
-  font = 'Maple Mono NF CN',
-  fontSize = 15,
-  width = 640,
-  floatShape,
+  font = 'Maple Mono',
+  fontSize = 14,
   typewriter = false,
+  imageSrc,
+  imageWidth = 100,
+  imageHeight = 84,
 }: {
   text: string
   font?: string
   fontSize?: number
-  width?: number
-  floatShape?: FloatShape
   typewriter?: boolean
+  imageSrc?: string
+  imageWidth?: number
+  imageHeight?: number
 }) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [height, setHeight] = useState(200)
+  const [height, setHeight] = useState(120)
 
   useEffect(() => {
+    const container = containerRef.current
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!container || !canvas) return
 
+    const containerWidth = container.getBoundingClientRect().width
     const fontStr = `${fontSize}px ${font}`
     const prepared = prepareWithSegments(text, fontStr)
     const ctx = canvas.getContext('2d')
@@ -40,30 +37,31 @@ export default function CanvasArticle({
 
     const dpr = window.devicePixelRatio || 1
     const padding = 24
+    const imgGap = 16
 
-    // Calculate all lines with variable widths (for float wrapping)
+    // Image position: top-right with padding
+    const imgX = containerWidth - padding - imageWidth
+    const imgY = padding
+    const imgBottom = imgY + imageHeight
+
+    // Calculate all lines with variable widths
     const lines: { text: string; x: number; y: number }[] = []
     let cursor: LayoutCursor = { segmentIndex: 0, graphemeIndex: 0 }
     let y = padding + fontSize
 
     while (true) {
-      let lineWidth = width - padding * 2
+      let lineWidth = containerWidth - padding * 2
+      const lineX = padding
 
-      // Narrow the line if it overlaps with the float shape
-      let lineX = padding
-      if (floatShape) {
+      // Narrow if line overlaps with image area
+      if (imageSrc) {
         const lineTop = y - fontSize
-        const lineBottom = y + (LINE_HEIGHT - fontSize)
-        if (
-          lineBottom > floatShape.y &&
-          lineTop < floatShape.y + floatShape.height
-        ) {
-          lineWidth -= floatShape.width + 16
-          if (floatShape.x < width / 2) {
-            lineX = floatShape.x + floatShape.width + 16
-          }
+        if (lineTop < imgBottom) {
+          lineWidth = imgX - padding - imgGap
         }
       }
+
+      if (lineWidth < 50) break
 
       const line = layoutNextLine(prepared, cursor, lineWidth)
       if (line === null) break
@@ -73,42 +71,20 @@ export default function CanvasArticle({
       y += LINE_HEIGHT
     }
 
-    const totalHeight = y + padding
+    const totalHeight = Math.max(y + padding, imgBottom + padding + 8)
     setHeight(totalHeight)
 
-    canvas.width = width * dpr
+    canvas.width = containerWidth * dpr
     canvas.height = totalHeight * dpr
-    canvas.style.width = width + 'px'
+    canvas.style.width = containerWidth + 'px'
     canvas.style.height = totalHeight + 'px'
     ctx.scale(dpr, dpr)
 
-    const theme = document.documentElement.getAttribute('data-theme')
-    const textColor = theme === 'dark' ? '#eeeeee' : '#8b7e74'
-    const accentColor = theme === 'dark' ? '#00ff88' : '#6b5c4d'
+    const computedStyle = getComputedStyle(canvas)
+    const textColor = computedStyle.getPropertyValue('--text-secondary').trim() || '#8b7e74'
 
     const drawLines = (count: number) => {
-      ctx.clearRect(0, 0, width, totalHeight)
-
-      // Draw float shape
-      if (floatShape) {
-        ctx.strokeStyle = accentColor
-        ctx.lineWidth = 1
-        ctx.setLineDash([4, 4])
-        if (floatShape.radius) {
-          ctx.beginPath()
-          ctx.arc(
-            floatShape.x + floatShape.width / 2,
-            floatShape.y + floatShape.height / 2,
-            floatShape.radius,
-            0,
-            Math.PI * 2
-          )
-          ctx.stroke()
-        } else {
-          ctx.strokeRect(floatShape.x, floatShape.y, floatShape.width, floatShape.height)
-        }
-        ctx.setLineDash([])
-      }
+      ctx.clearRect(0, 0, containerWidth, totalHeight)
 
       ctx.font = fontStr
       ctx.fillStyle = textColor
@@ -119,30 +95,44 @@ export default function CanvasArticle({
       }
     }
 
+    // Load and draw image
+    const drawImage = () => {
+      if (!imageSrc) return
+      const img = new Image()
+      img.onload = () => {
+        ctx.drawImage(img, imgX, imgY, imageWidth, imageHeight)
+      }
+      img.src = imageSrc
+    }
+
     if (typewriter) {
       let lineIndex = 0
+      drawImage()
       const interval = setInterval(() => {
         lineIndex++
         drawLines(lineIndex)
+        drawImage()
         if (lineIndex >= lines.length) clearInterval(interval)
       }, 80)
       return () => clearInterval(interval)
     } else {
       drawLines(lines.length)
+      drawImage()
     }
-  }, [text, font, fontSize, width, floatShape, typewriter])
+  }, [text, font, fontSize, typewriter, imageSrc, imageWidth, imageHeight])
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        width: '100%',
-        maxWidth: width,
-        height,
-        display: 'block',
-        borderRadius: 'var(--radius-lg, 12px)',
-        border: '1px solid var(--border, #e8e0d8)',
-      }}
-    />
+    <div ref={containerRef} style={{ width: '100%' }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'block',
+          width: '100%',
+          height,
+          borderRadius: 12,
+          border: '1px solid var(--border, #e8e0d8)',
+        }}
+      />
+    </div>
   )
 }

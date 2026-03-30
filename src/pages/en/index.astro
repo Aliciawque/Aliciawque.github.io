@@ -12,7 +12,7 @@ const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slic
 ---
 <BaseLayout title="Alicia.dev" lang={lang}>
   <section class="hero container">
-    <AsciiHero client:visible text={t(lang, 'home.hero.title')} font="Maple Mono NF CN" />
+    <AsciiHero client:visible text={t(lang, 'home.hero.title')} font="Maple Mono" />
     <p class="hero-subtitle">{t(lang, 'home.hero.subtitle')}</p>
   </section>
 
@@ -56,7 +56,7 @@ const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slic
 
 <style>
   .hero {
-    padding: 48px 24px 40px;
+    padding: 8px 24px 12px;
   }
   .hero-title {
     font-size: 28px;
@@ -72,7 +72,7 @@ const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slic
   .hero-subtitle {
     font-size: 14px;
     color: var(--text-secondary);
-    margin-top: 12px;
+    margin-top: 4px;
   }
   [data-theme="dark"] .hero-subtitle {
     color: var(--text-muted);
@@ -133,7 +133,7 @@ const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slic
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin-top: 4px;
   }
   .card-meta .card-tags {
     margin-top: 0;

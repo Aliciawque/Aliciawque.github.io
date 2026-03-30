@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro'
 import ReadingProgress from '../components/ReadingProgress.astro'
 import TOC from '../components/TOC.astro'
+import CanvasArticle from '../components/pretext/CanvasArticle.tsx'
 import { t, type Lang } from '../i18n/utils'
 
 interface Props {
@@ -11,9 +12,13 @@ interface Props {
   lang: Lang
   headings: { depth: number; slug: string; text: string }[]
   readingTime: number
+  excerpt?: string
 }
 
-const { title, date, tags, lang, headings, readingTime } = Astro.props
+const { title, date, tags, lang, headings, readingTime, excerpt = '' } = Astro.props
+const canvasText = lang === 'zh'
+  ? `${excerpt} 这是一段用 Canvas 渲染的文字，由 Pretext 的 layoutNextLine API 驱动，实现了文字环绕不规则形状的效果。每一行的可用宽度根据是否与右侧圆形重叠而动态调整。`
+  : `${excerpt} This text is rendered on Canvas, powered by Pretext's layoutNextLine API, demonstrating text wrapping around irregular shapes. Each line's available width adjusts dynamically based on overlap with the circle.`
 const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
   year: 'numeric', month: 'long', day: 'numeric'
 })
@@ -33,6 +38,20 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
           {tags.map(tag => <span class="tag">{tag}</span>)}
         </div>
       </header>
+      {excerpt && (
+        <div class="canvas-quote">
+          <CanvasArticle
+            client:visible
+            text={canvasText}
+            font="Maple Mono"
+            fontSize={14}
+            typewriter={true}
+            imageSrc="/img/claude-pixel.svg"
+            imageWidth={100}
+            imageHeight={84}
+          />
+        </div>
+      )}
       <div class="prose">
         <slot />
       </div>
@@ -44,10 +63,13 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
 <style>
   .article-layout {
     display: grid;
-    grid-template-columns: 1fr 200px;
+    grid-template-columns: minmax(0, 680px) 180px;
     gap: 48px;
+    justify-content: center;
     padding-top: 32px;
     padding-bottom: 48px;
+    max-width: 960px;
+    margin: 0 auto;
   }
   @media (max-width: 900px) {
     .article-layout {
@@ -89,6 +111,11 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
     color: var(--accent);
     border: 1px solid var(--tag-bg);
   }
+  .canvas-quote {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+  }
   .prose {
     font-size: 15px;
     line-height: 1.8;
@@ -97,14 +124,14 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
   .prose h2 {
     font-size: 22px;
     font-weight: 600;
-    color: var(--text);
+    color: var(--accent);
     margin-top: 40px;
     margin-bottom: 16px;
   }
   .prose h3 {
     font-size: 18px;
     font-weight: 500;
-    color: var(--text);
+    color: var(--accent);
     margin-top: 32px;
     margin-bottom: 12px;
   }

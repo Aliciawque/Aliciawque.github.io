@@ -1,11 +1,11 @@
 ---
-title: "OpenClaw Souls"
+title: "Personalized Agent Forge"
 lang: "en"
-translationSlug: "openclaw-souls"
-description: "AI Agent skill marketplace platform for developers to share and discover Agent Skills."
-tech: ["Next.js", "TypeScript", "Tailwind"]
-url: "https://github.com/"
+translationSlug: "agent-forge"
+description: "A 3-skill OpenClaw bundle for turning creators, professions, and fictional characters into deployable personalized agents."
+tech: ["OpenClaw", "TypeScript", "AI Agent"]
+url: "https://github.com/Aliciawque/openclaw-personalized-agent-forge"
 order: 1
 ---
 
-OpenClaw Souls is an AI Agent skill marketplace platform.
+Personalized Agent Forge is a 3-skill OpenClaw bundle for turning creators, professions, and fictional characters into deployable personalized agents.

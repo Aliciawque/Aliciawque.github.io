@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
-const SPARK_CHARS = '@#$%&*!~^()+={}[]|<>?/'
-const MAX_PARTICLES = 30
+const SPARK_CHARS = '@#$%&*!~^()+={}[]|<>?/\\:;'
+const MAX_PARTICLES = 150
 
 export default function ScrollSpark() {
   useEffect(() => {
@@ -53,8 +53,8 @@ export default function ScrollSpark() {
       requestAnimationFrame(() => {
         const currentScroll = window.scrollY
         const delta = currentScroll - lastScroll
-        if (Math.abs(delta) > 10) {
-          const count = Math.min(3, Math.floor(Math.abs(delta) / 20))
+        if (Math.abs(delta) > 2) {
+          const count = Math.min(12, Math.max(3, Math.floor(Math.abs(delta) / 5)))
           for (let i = 0; i < count; i++) {
             spawnParticle(delta > 0 ? 'up' : 'down')
           }
