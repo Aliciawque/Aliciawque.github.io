@@ -4,7 +4,7 @@ lang: "en"
 translationSlug: "alicia-blog"
 description: "A bilingual personal blog built with Astro + Pretext, featuring ASCII Hero animation, text wrapping, scroll sparks and more."
 tech: ["Astro", "Pretext", "React", "TypeScript"]
-url: "https://aliciawque.github.io"
+url: "https://github.com/Aliciawque/Aliciawque.github.io"
 order: 0
 ---
 

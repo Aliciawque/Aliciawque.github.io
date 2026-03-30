@@ -4,7 +4,7 @@ lang: "zh"
 translationSlug: "alicia-blog"
 description: "基于 Astro + Pretext 打造的双语个人博客，支持 ASCII Hero 动画、文字环绕、滚动粒子等 6 种交互效果。"
 tech: ["Astro", "Pretext", "React", "TypeScript"]
-url: "https://aliciawque.github.io"
+url: "https://github.com/Aliciawque/Aliciawque.github.io"
 order: 0
 ---
 
