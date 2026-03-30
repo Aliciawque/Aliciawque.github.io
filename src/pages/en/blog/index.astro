@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { getCollection } from 'astro:content'
+import { t } from '../../../i18n/utils'
+
+const lang = 'en' as const
+const allPosts = await getCollection('blog', ({ data }) => data.lang === lang)
+const posts = allPosts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+---
+<BaseLayout title={`${t(lang, 'blog.title')} — Alicia.dev`} lang={lang}>
+  <div class="container">
+    <header class="page-header">
+      <h1 class="page-title">{t(lang, 'blog.title')}</h1>
+      <p class="page-count">{t(lang, 'blog.count', { count: posts.length })}</p>
+    </header>
+
+    <!-- VirtualList React Island goes here in Task 12 -->
+    <div class="card-list" id="blog-list">
+      {posts.map(post => (
+        <a href={`/${lang}/blog/${post.data.translationSlug}`} class="card">
+          <h3 class="card-title">{post.data.title}</h3>
+          <p class="card-excerpt">{post.data.excerpt}</p>
+          <div class="card-meta">
+            <div class="card-tags">
+              {post.data.tags.map(tag => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+            <time class="card-date">{post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</time>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: 40px 0 24px;
+  }
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  [data-theme="dark"] .page-title {
+    color: var(--accent);
+  }
+  .page-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 40px;
+  }
+  .card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s;
+    display: block;
+  }
+  .card:hover {
+    border-color: var(--accent);
+  }
+  .card-title { font-size: 16px; font-weight: 500; color: var(--text); }
+  .card-excerpt { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.7; }
+  .card-meta { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .card-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 3px 10px; background: var(--tag-bg); color: var(--text-secondary); border-radius: var(--radius-md); }
+  [data-theme="dark"] .tag { color: var(--accent); border: 1px solid var(--tag-bg); }
+  .card-date { font-size: 12px; color: var(--text-muted); }
+</style>

@@ -1,0 +1,60 @@
+---
+import { t, type Lang } from '../i18n/utils'
+
+interface Props {
+  headings: { depth: number; slug: string; text: string }[]
+  lang: Lang
+}
+
+const { headings, lang } = Astro.props
+const tocHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3)
+---
+{tocHeadings.length > 0 && (
+  <aside class="toc">
+    <h4 class="toc-title">{t(lang, 'article.toc')}</h4>
+    <nav>
+      <ul>
+        {tocHeadings.map(h => (
+          <li class:list={[`depth-${h.depth}`]}>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+)}
+
+<style>
+  .toc {
+    position: sticky;
+    top: 80px;
+    font-size: 12px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+  .toc-title {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  ul {
+    list-style: none;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+  li.depth-3 {
+    padding-left: 16px;
+  }
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  a:hover {
+    color: var(--accent);
+  }
+</style>

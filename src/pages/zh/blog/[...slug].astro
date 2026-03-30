@@ -1,0 +1,27 @@
+---
+import { getCollection, render } from 'astro:content'
+import ArticleLayout from '../../../layouts/ArticleLayout.astro'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.lang === 'zh')
+  return posts.map(post => ({
+    params: { slug: post.data.translationSlug },
+    props: { post },
+  }))
+}
+
+const { post } = Astro.props
+const { Content, headings } = await render(post)
+const wordCount = post.body?.length ?? 0
+const readingTime = Math.max(1, Math.ceil(wordCount / 400))
+---
+<ArticleLayout
+  title={post.data.title}
+  date={post.data.date}
+  tags={post.data.tags}
+  lang="zh"
+  headings={headings}
+  readingTime={readingTime}
+>
+  <Content />
+</ArticleLayout>
