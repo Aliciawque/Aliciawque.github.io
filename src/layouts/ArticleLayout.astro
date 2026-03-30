@@ -132,6 +132,8 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
     font-size: 15px;
     line-height: 1.8;
     color: var(--text-secondary);
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
   .prose h2 {
     font-size: 22px;
@@ -163,6 +165,7 @@ const dateStr = date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
     border-radius: var(--radius-lg);
     overflow-x: auto;
     margin-bottom: 16px;
+    max-width: 100%;
   }
   .prose pre code {
     padding: 0;

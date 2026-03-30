@@ -12,35 +12,44 @@ interface Particle {
 }
 
 const ASCII_CHARS = '@#$%&*!~^()+={}[]|<>?/\\:;'
-const FONT_SIZE = 72
-const LINE_HEIGHT = 88
+
+function getFontSize(width: number) {
+  if (width < 400) return 32
+  if (width < 500) return 40
+  if (width < 700) return 52
+  return 72
+}
 
 export default function AsciiHero({ text, font }: { text: string; font: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000 })
   const rafRef = useRef<number>(0)
+  const fontSizeRef = useRef(72)
 
   const initParticles = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    // Use CSS dimensions, not DPR-scaled canvas dimensions
     const cssW = Number(canvas.dataset.cssWidth) || 600
-    const cssH = Number(canvas.dataset.cssHeight) || 360
+    const cssH = Number(canvas.dataset.cssHeight) || 280
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     const activeFont = isDark ? 'Share Tech Mono' : font
 
-    const prepared = prepareWithSegments(text, `${FONT_SIZE}px ${activeFont}`, { whiteSpace: 'pre-wrap' })
-    const { lines } = layoutWithLines(prepared, cssW - 48, LINE_HEIGHT)
+    const fontSize = getFontSize(cssW)
+    const lineHeight = Math.round(fontSize * 1.22)
+    fontSizeRef.current = fontSize
+
+    const prepared = prepareWithSegments(text, `${fontSize}px ${activeFont}`, { whiteSpace: 'pre-wrap' })
+    const { lines } = layoutWithLines(prepared, cssW - 32, lineHeight)
 
     const particles: Particle[] = []
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    ctx.font = `${FONT_SIZE}px ${activeFont}`
+    ctx.font = `${fontSize}px ${activeFont}`
 
-    let y = (cssH - lines.length * LINE_HEIGHT) / 2 + FONT_SIZE
+    let y = (cssH - lines.length * lineHeight) / 2 + fontSize
     for (const line of lines) {
       const lineWidth = line.width
       let x = (cssW - lineWidth) / 2
@@ -62,7 +71,7 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
           x += ctx.measureText(char).width
         }
       }
-      y += LINE_HEIGHT
+      y += lineHeight
     }
 
     particlesRef.current = particles
@@ -110,8 +119,8 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
       if (!ctx) return
       const w = Number(canvas.dataset.cssWidth) || canvas.width
       const h = Number(canvas.dataset.cssHeight) || canvas.height
+      const fontSize = fontSizeRef.current
 
-      // Read CSS custom properties via getComputedStyle
       const computedStyle = getComputedStyle(canvas)
       const accentColor = computedStyle.getPropertyValue('--accent').trim() || '#00ff88'
       const mutedColor = computedStyle.getPropertyValue('--text-muted').trim() || '#555555'
@@ -119,7 +128,7 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
       const activeFont = isDark ? 'Share Tech Mono' : font
 
       ctx.clearRect(0, 0, w, h)
-      ctx.font = `${FONT_SIZE}px ${activeFont}`
+      ctx.font = `${fontSize}px ${activeFont}`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
 
