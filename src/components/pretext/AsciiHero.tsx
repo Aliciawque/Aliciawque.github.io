@@ -109,10 +109,17 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
 
     canvas.addEventListener('mousemove', handleMouse)
     canvas.addEventListener('mouseleave', handleLeave)
-    canvas.addEventListener('touchmove', (e) => {
+    const handleTouch = (e: TouchEvent) => {
       const rect = canvas.getBoundingClientRect()
       mouseRef.current = { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top }
-    })
+    }
+    const handleTouchEnd = () => {
+      mouseRef.current = { x: -1000, y: -1000 }
+    }
+
+    canvas.addEventListener('touchmove', handleTouch)
+    canvas.addEventListener('touchend', handleTouchEnd)
+    canvas.addEventListener('touchcancel', handleTouchEnd)
 
     const animate = () => {
       const ctx = canvas.getContext('2d')
@@ -178,6 +185,9 @@ export default function AsciiHero({ text, font }: { text: string; font: string }
       window.removeEventListener('resize', resize)
       canvas.removeEventListener('mousemove', handleMouse)
       canvas.removeEventListener('mouseleave', handleLeave)
+      canvas.removeEventListener('touchmove', handleTouch)
+      canvas.removeEventListener('touchend', handleTouchEnd)
+      canvas.removeEventListener('touchcancel', handleTouchEnd)
     }
   }, [font, initParticles])
 
