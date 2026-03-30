@@ -40,7 +40,7 @@ const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slic
     <h2 class="section-label">{t(lang, 'home.featured')}</h2>
     <div class="card-list">
       {sortedProjects.map(project => (
-        <div class="card">
+        <a href={project.data.url || `/${lang}/projects/`} class="card" target={project.data.url ? '_blank' : undefined} rel={project.data.url ? 'noopener' : undefined}>
           <h3 class="card-title">{project.data.title}</h3>
           <p class="card-excerpt">{project.data.description}</p>
           <div class="card-tags">
@@ -48,7 +48,7 @@ const sortedProjects = projects.sort((a, b) => a.data.order - b.data.order).slic
               <span class="tag">{tech}</span>
             ))}
           </div>
-        </div>
+        </a>
       ))}
     </div>
   </section>
