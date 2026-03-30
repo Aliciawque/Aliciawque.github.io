@@ -1,4 +1,14 @@
 ---
-const preferredLang = Astro.preferredLocale || 'zh'
-return Astro.redirect(`/${preferredLang}/`)
 ---
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/en/" />
+  <script is:inline>
+    const lang = navigator.language?.startsWith('zh') ? 'zh' : 'en'
+    location.replace('/' + lang + '/')
+  </script>
+</head>
+<body></body>
+</html>
