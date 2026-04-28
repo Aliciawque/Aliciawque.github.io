@@ -2,3 +2,9 @@ node_modules/
 dist/
 .astro/
 .superpowers/
+
+# Claude Code project state — generated, not for tracking
+.claude/anatomy.md
+.claude/buglog.json
+.claude/cache/
+.claude/sessions/
